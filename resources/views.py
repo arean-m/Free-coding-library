@@ -17,8 +17,23 @@ def resource_home(request):
     return render(request, 'resources/index.html', {'form': form, 'resources': all_resources})
 
 def generate_live_admin(request):
-    if not User.objects.filter(username="admin").exists():
-        User.objects.create_superuser("admin", "admin@example.com", "YourSecurePassword123!")
-        return HttpResponse("<h1>Success! Live superuser account 'admin' created.</h1>")
-    else:
-        return HttpResponse("<h1>Account already exists!</h1>")
+    username = "admin"
+    # We are using a fresh, clear password string here
+    password = "LetMeInSecure2026!" 
+    
+    # This will find the admin or create it if it disappeared
+    user, created = User.objects.get_or_create(username=username, defaults={'email': 'admin@example.com'})
+    
+    # This forces the password to be exactly what is written above
+    user.set_password(password)
+    user.is_superuser = True
+    user.is_staff = True
+    user.save()
+    
+    return HttpResponse(f"""
+        <h1>🔐 Live Admin Account Synced!</h1>
+        <p><strong>Username:</strong> {username}</p>
+        <p><strong>Password:</strong> {password}</p>
+        <br>
+        <p>Copy the password above exactly (no spaces) and try logging in at <a href="/admin/">/admin/</a> now!</p>
+    """)
