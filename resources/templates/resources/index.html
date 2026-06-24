@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Coding Library</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen p-6 md:p-12">
+    <div class="max-w-6xl mx-auto">
+        
+        <header class="mb-12 border-b border-gray-800 pb-6">
+            <h1 class="text-4xl font-bold text-emerald-400 tracking-tight">Free Coding Library</h1>
+            <p class="text-gray-400 mt-2 text-lg">Bridging the gap with open-access programming knowledge.</p>
+        </header>
+
+        <div class="grid gap-8 lg:grid-cols-3">
+            
+            <div class="lg:col-span-1 bg-gray-800 border border-gray-700 rounded-2xl p-6 h-fit sticky top-6">
+                <h2 class="text-xl font-bold text-white mb-1">Suggest a Resource</h2>
+                <p class="text-xs text-gray-400 mb-6">Found a great free tutorial? Share it with the community.</p>
+                
+                <form method="POST" class="space-y-4">
+                    {% csrf_token %} 
+                    
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Resource Title</label>
+                        {{ form.title }}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Subject / Topic</label>
+                        {{ form.topic }}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Brief Description</label>
+                        {{ form.description }}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">URL / Link</label>
+                        {{ form.resource_url }}
+                    </div>
+
+                    <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-gray-950 font-bold py-3 px-4 rounded-xl transition duration-150 shadow-lg cursor-pointer text-center block mt-6">
+                        Submit to Directory
+                    </button>
+                </form>
+            </div>
+
+            <div class="lg:col-span-2">
+                <h2 class="text-xl font-bold text-white mb-6">Available Programming Guides</h2>
+                <div class="grid gap-6 sm:grid-cols-2">
+                    {% for item in resources %}
+                    <div class="bg-gray-800 border border-gray-700 rounded-2xl p-6 shadow-md hover:border-emerald-500 transition duration-200 flex flex-col justify-between">
+                        <div>
+                            <span class="inline-block bg-emerald-500/10 text-emerald-400 text-xs px-2.5 py-1 rounded-full font-medium mb-4">
+                                {{ item.topic }}
+                            </span>
+                            <h3 class="text-lg font-semibold mb-2 text-white">{{ item.title }}</h3>
+                            <p class="text-gray-400 text-sm mb-6 leading-relaxed">{{ item.description }}</p>
+                        </div>
+                        <a href="{{ item.resource_url }}" target="_blank" class="inline-flex items-center text-sm font-semibold text-emerald-400 hover:text-emerald-300 group mt-auto">
+                            Access Resource <span class="transform group-hover:translate-x-1 transition-transform duration-150 ml-1">&rarr;</span>
+                        </a>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-12 bg-gray-800 border border-dashed border-gray-700 rounded-2xl col-span-2">
+                        <p class="text-gray-500">The library directory is empty. Use the submission panel to add the first card!</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
